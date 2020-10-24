@@ -8,11 +8,11 @@ class FakeUsersRepository implements IUsersRepository {
     private users: User[] = [];
 
     public async findById(id: string): Promise<User | undefined> {
-        return this.users.find((user) => (user.id = id));
+        return this.users.find((user) => (user.id === id));
     }
 
     public async findByEmail(email: string): Promise<User | undefined> {
-        return this.users.find((user) => (user.email = email));
+        return this.users.find((user) => (user.email === email));
     }
 
     public async create(userData: ICreateUserDTO): Promise<User> {
@@ -21,7 +21,6 @@ class FakeUsersRepository implements IUsersRepository {
         Object.assign(user, { id: uuid() }, userData);
 
         this.users.push(user);
-
         return user;
     }
 
