@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+import { container } from "tsyringe";
+import { classToClass } from "class-transformer";
 
-import { container } from 'tsyringe';
-
-import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
+import AuthenticateUserService from "@modules/users/services/AuthenticateUserService";
 
 export default class SessionsController {
     async create(request: Request, response: Response): Promise<Response> {
@@ -12,11 +12,10 @@ export default class SessionsController {
 
         const { user, token } = await authenticateUser.execute({
             email,
-            password
+            password,
         });
 
-        delete user.password;
-
-        return response.json({ user, token });
+        //classToClass serve para aplicar as propriedades @Exclude() e @Expose() inseridas da User.ts
+        return response.json({ user: classToClass(user), token });
     }
 }
