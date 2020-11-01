@@ -33,6 +33,7 @@
     "@types/mongodb": "^3.5.32",
     "@types/nodemailer": "^6.4.0",
     "@typescript-eslint/eslint-plugin": "^3.10.0",
+    "aws-sdk": "^2.783.0",
     "bcryptjs": "^2.4.3",
     "celebrate": "^13.0.3",
     "class-transformer": "^0.3.1",
