@@ -3,6 +3,7 @@ import { injectable, inject } from "tsyringe";
 import IUsersRepository from "@modules/users/repositories/IUsersRepository";
 import User from "@modules/users/infra/typeorm/entities/User";
 import IFindAllProvidersDTO from "../dtos/IFindAllProvidersDTO";
+import ICacheProvider from "@shared/container/providers/CacheProvider/models/ICacheProvider";
 
 interface IRequest {
     user_id: string;
@@ -12,15 +13,25 @@ interface IRequest {
 class ListProvidersService {
     constructor(
         @inject("UsersRepository")
-        private usersRepository: IUsersRepository
+        private usersRepository: IUsersRepository,
+
+        @inject("CacheProvider")
+        private cacheProvider: ICacheProvider
     ) {}
 
     public async execute({
         except_user_id,
     }: IFindAllProvidersDTO): Promise<User[]> {
-        const users = await this.usersRepository.findAllProviders({
-            except_user_id,
-        });
+        let users = await this.cacheProvider.recover<User[]>(`providers-list:${except_user_id}`);
+
+        if(!users) {
+            users = await this.usersRepository.findAllProviders({
+                except_user_id,
+            });
+
+            await this.cacheProvider.save(`providers-list:${except_user_id}`, users);
+        }
+
 
         return users;
     }
