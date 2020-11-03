@@ -25,6 +25,8 @@ class Appointment {
     @Column()
     user_id: string;
 
+    //o eager serve para trazer os dados de usuario automaticamente ao trazer os dados de appointment
+    //@ManyToOne(() => User, { eager: true })
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user: User;
